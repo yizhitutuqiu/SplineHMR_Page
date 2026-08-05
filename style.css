@@ -173,7 +173,7 @@ section p.lead {
   display: block;
 }
 
-#demo .figure-card { max-width: 440px; }
+#demo .figure-card { max-width: 300px; }
 #method .figure-card { max-width: 760px; }
 #results .figure-card { max-width: 860px; }
 
