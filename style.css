@@ -156,15 +156,20 @@ section p.lead {
   color: var(--muted);
   font-size: 1rem;
   max-width: 820px;
-  margin: 0 0 18px;
+  margin: 0 0 12px;
+}
+
+section p {
+  max-width: 820px;
+  margin: 0 0 14px;
+  color: #444444;
 }
 
 .figure-card {
   max-width: 820px;
   margin: 18px auto 8px;
-  border: 1px solid var(--line);
-  background: #ffffff;
-  overflow: hidden;
+  background: transparent;
+  overflow: visible;
 }
 
 .figure-card img,
@@ -174,6 +179,7 @@ section p.lead {
 }
 
 #demo .figure-card { max-width: 380px; }
+.figure-card img { margin: 0 auto; }
 #method .figure-card { max-width: 760px; }
 #results .figure-card { max-width: 860px; }
 
@@ -184,7 +190,6 @@ figcaption {
   font-size: 0.88rem;
   text-align: center;
   background: #fafafa;
-  border-top: 1px solid #eeeeee;
 }
 
 .grid {

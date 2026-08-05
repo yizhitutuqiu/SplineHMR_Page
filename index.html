@@ -50,12 +50,19 @@
 
     <section class="container" id="abstract">
       <h2>Abstract</h2>
-      <p class="lead">Modern video-based human mesh regressors produce increasingly smooth motions, but test-time refinement must improve 2D alignment without destroying temporal consistency. SplineHMR constrains pose and camera updates to a low-dimensional B-spline trajectory subspace. We instantiate this prior as <strong>Spline-Opt</strong>, a control-space optimizer, and <strong>Spline-Diff</strong>, a B-spline projection module embedded into ScoreHMR's DDIM loop.</p>
+      <p class="lead">SplineHMR is a simple temporal prior for refining SMPL/SMPL-X motion sequences. Instead of optimizing every frame independently, it represents pose and camera corrections as smooth B-spline trajectories. This makes refinement less prone to frame-to-frame jitter while still allowing the mesh to move toward better image evidence.</p>
+      <p>We use the same prior in two complementary settings. <strong>Spline-Opt</strong> performs direct test-time optimization in the B-spline control space. <strong>Spline-Diff</strong> inserts a B-spline projection step into ScoreHMR's diffusion sampling process. Both variants are designed to refine existing human mesh recovery results rather than replace the upstream video regressor.</p>
+    </section>
+
+    <section class="container" id="overview">
+      <h2>What does SplineHMR do?</h2>
+      <p>SplineHMR takes a per-frame or video-based human mesh estimate as input and refines the body motion under a sequence-level smoothness model. The key idea is to optimize a small number of B-spline control points, then decode them into dense frame-wise corrections for the body pose and camera. Because neighboring frames share control points, the refinement naturally favors coherent motion instead of isolated per-frame fixes.</p>
+      <p>This is useful when a strong video HMR method already gives plausible global motion, but local image alignment or body pose can still be improved. In that regime, unconstrained test-time fitting may introduce jitter, while overly strong temporal smoothing may oversmooth the motion. SplineHMR aims for the middle ground: better fitting with temporally structured updates.</p>
     </section>
 
     <section class="container" id="demo">
       <h2>Demo teaser</h2>
-      <p class="lead">The red mesh shows the input before optimization; the green mesh shows the refined result after Spline-Opt.</p>
+      <p class="lead">The red mesh shows the input before optimization; the green mesh shows the refined result after Spline-Opt. In the overlay, the refined motion keeps the temporal structure of the input sequence while reducing visible misalignment.</p>
       <div class="figure-card">
         <img src="assets/demo_overlay.gif" alt="Spline-Opt red-green overlay demo">
         <div class="caption">Red: before optimization. Green: after Spline-Opt.</div>
@@ -64,17 +71,17 @@
 
     <section class="container" id="method">
       <h2>Method overview</h2>
-      <p class="lead">SplineHMR changes the variables exposed to refinement: instead of frame-wise independent updates, correction trajectories are represented by smooth B-spline control points.</p>
+      <p class="lead">SplineHMR changes the variables exposed to refinement: instead of frame-wise independent updates, correction trajectories are represented by smooth B-spline control points. This makes the prior representation-level and easy to attach to different refinement backends.</p>
       <div class="grid">
         <div class="card">
           <span class="badge">Spline-Opt</span>
           <h3>Control-space optimization</h3>
-          <p>Fits bounded B-spline corrections with LBFGS, improving reprojection alignment while preserving temporally structured updates.</p>
+          <p>Fits bounded B-spline corrections with LBFGS. The optimizer updates compact control points rather than every frame, improving reprojection alignment while discouraging jittery frame-wise corrections.</p>
         </div>
         <div class="card">
           <span class="badge">Spline-Diff</span>
           <h3>Diffusion-time projection</h3>
-          <p>Projects DDIM clean-state estimates onto a B-spline temporal subspace and softly blends them back into ScoreHMR sampling.</p>
+          <p>Projects DDIM clean-state estimates onto a B-spline temporal subspace and softly blends them back into ScoreHMR sampling, turning the temporal prior into a diffusion-time constraint.</p>
         </div>
       </div>
       <div class="figure-card">
@@ -93,7 +100,7 @@
 
     <section class="container" id="results">
       <h2>Qualitative results</h2>
-      <p class="lead">SplineHMR is designed to improve the alignment-stability trade-off for SMPL sequence refinement.</p>
+      <p class="lead">SplineHMR is designed to improve the alignment-stability trade-off for SMPL sequence refinement. The qualitative examples compare the input regressor and common refinement baselines with our B-spline constrained refinement.</p>
       <div class="figure-card">
         <img src="assets/qualitative_fitting.png" alt="2D fitting qualitative comparison">
         <div class="caption">2D fitting comparison from the paper: GVHMR, +SMPLify-X, +ScoreHMR, and +Ours.</div>
