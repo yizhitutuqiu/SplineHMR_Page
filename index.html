@@ -15,7 +15,7 @@
     <div class="container">
       <div class="venue">ACM Multimedia 2026 · MM '26</div>
       <h1>SplineHMR: A Universal B-spline Prior for Temporally Stable SMPL Refinement</h1>
-      <p class="subtitle">A lightweight representation-level temporal prior that constrains refinement updates to smooth B-spline trajectories, improving temporal stability without sacrificing 2D alignment.</p>
+      <p class="subtitle">A B-spline temporal prior for stable SMPL sequence refinement.</p>
 
       <div class="authors">
         <span>Tengwei Li<sup>1</sup></span>,
@@ -36,7 +36,7 @@
         <a class="button secondary" href="https://github.com/yizhitutuqiu/SplineHMR">Code</a>
         <a class="button video" href="https://www.youtube.com/watch?v=BntuG1ZOT6g">Video</a>
       </nav>
-      <p class="note">The paper has been accepted to ACM Multimedia 2026. The ACM DL page is not live yet; DOI assigned: <a href="https://doi.org/10.1145/3767308.3835749">10.1145/3767308.3835749</a>.</p>
+      <p class="note">Accepted to ACM Multimedia 2026. The ACM DL paper page is not live yet; DOI assigned: <a href="https://doi.org/10.1145/3767308.3835749">10.1145/3767308.3835749</a>.</p>
     </div>
   </header>
 
@@ -50,7 +50,7 @@
 
     <section class="container" id="abstract">
       <h2>Abstract</h2>
-      <p class="lead">Modern video-based human mesh regressors produce increasingly smooth motions, but test-time refinement must improve 2D alignment without destroying temporal consistency. SplineHMR constrains pose and camera updates to a low-dimensional B-spline trajectory subspace. We instantiate this prior as <strong>Spline-Opt</strong>, a control-space LBFGS optimizer, and <strong>Spline-Diff</strong>, a B-spline projection module embedded into ScoreHMR's DDIM loop. Across both settings, SplineHMR reduces temporal inconsistency while maintaining good 2D alignment and competitive 3D fidelity.</p>
+      <p class="lead">Modern video-based human mesh regressors produce increasingly smooth motions, but test-time refinement must improve 2D alignment without destroying temporal consistency. SplineHMR constrains pose and camera updates to a low-dimensional B-spline trajectory subspace. We instantiate this prior as <strong>Spline-Opt</strong>, a control-space optimizer, and <strong>Spline-Diff</strong>, a B-spline projection module embedded into ScoreHMR's DDIM loop.</p>
     </section>
 
     <section class="container" id="demo">
