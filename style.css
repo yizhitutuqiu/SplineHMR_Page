@@ -164,7 +164,7 @@ h1 {
   gap: 18px 24px;
 }
 .demo-gallery .figure { margin-top: 12px; }
-.demo-figure { max-width: 520px; }
+.demo-figure { max-width: 560px; }
 .method-overview-figure { max-width: 640px; }
 .result-figure { max-width: 700px; }
 
@@ -306,7 +306,7 @@ pre {
   .authors { gap: 0 8px; }
   .method-grid,
   .two-col-figures { grid-template-columns: 1fr; }
-  .demo-figure { max-width: 440px; }
+  .demo-figure { max-width: 100%; }
     .method-overview-figure,
   .result-figure { max-width: 100%; }
 }
