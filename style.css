@@ -95,6 +95,13 @@ h1 {
 .link-button.video { background: #c4302b; }
 .link-button.doi { background: #2b5fab; }
 
+.icon {
+  width: 17px;
+  height: 17px;
+  fill: currentColor;
+  flex: 0 0 auto;
+}
+
 .soon {
   margin-left: 1px;
   font-size: 0.82em;
