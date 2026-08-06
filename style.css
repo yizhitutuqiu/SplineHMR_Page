@@ -163,11 +163,19 @@ h1 {
   gap: 18px;
 }
 .demo-gallery .figure {
-  width: min(100%, 820px);
   margin-top: 12px;
 }
-.demo-figure { max-width: 820px; }
-.demo-figure-large { max-width: 980px; width: min(100vw - 36px, 980px); }
+.demo-figure {
+  width: min(100%, 760px);
+  max-width: 760px;
+}
+.demo-figure-large {
+  width: min(100vw - 36px, 980px);
+  max-width: 980px;
+}
+.demo-figure img {
+  width: 100%;
+}
 .method-overview-figure { max-width: 640px; }
 .result-figure { max-width: 700px; }
 
@@ -310,7 +318,11 @@ pre {
   .method-grid,
   .two-col-figures { grid-template-columns: 1fr; }
   .demo-gallery .figure,
-  .demo-figure { max-width: 100%; }
-    .method-overview-figure,
+  .demo-figure,
+  .demo-figure-large {
+    width: 100%;
+    max-width: 100%;
+  }
+  .method-overview-figure,
   .result-figure { max-width: 100%; }
 }
