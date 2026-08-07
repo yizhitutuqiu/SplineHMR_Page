@@ -61,6 +61,47 @@
       </ul>
     </section>
 
+    <section class="section demo-carousel-section" id="demo">
+      <h2>Demo</h2>
+      <div class="rule"></div>
+      <p class="demo-intro">Each clip shows a synchronized 2×2 comparison: <strong>Input</strong>, <strong>Raw</strong>, <strong>Spline-Opt</strong>, and <strong>Spline-Diff</strong>. The lower row uses red/green overlays to show before/after refinement.</p>
+
+      <div class="demo-carousel" data-carousel>
+        <button class="carousel-arrow prev" type="button" aria-label="Previous demo" data-carousel-prev>‹</button>
+
+        <div class="carousel-track">
+          <article class="carousel-slide active" data-carousel-slide>
+            <div class="video-loading" data-video-loading>
+              <span class="loader-dot"></span>
+              <span>Video Loading...</span>
+            </div>
+            <video class="demo-video" autoplay muted loop playsinline preload="metadata" poster="assets/teaser.png">
+              <source src="assets/videos/climbing_3mb_demo_2x2_5mb.mp4" type="video/mp4">
+            </video>
+            <div class="slide-caption"><code>climbing_3mb</code>: Input / Raw / Spline-Opt / Spline-Diff.</div>
+          </article>
+
+          <article class="carousel-slide" data-carousel-slide>
+            <div class="video-loading" data-video-loading>
+              <span class="loader-dot"></span>
+              <span>Video Loading...</span>
+            </div>
+            <video class="demo-video portrait-video" autoplay muted loop playsinline preload="metadata" poster="assets/teaser.png">
+              <source src="assets/videos/climbing_2_3mb_demo_2x2_5mb.mp4" type="video/mp4">
+            </video>
+            <div class="slide-caption"><code>climbing_2_3mb</code>: Input / Raw / Spline-Opt / Spline-Diff.</div>
+          </article>
+        </div>
+
+        <button class="carousel-arrow next" type="button" aria-label="Next demo" data-carousel-next>›</button>
+
+        <div class="carousel-dots" aria-label="Demo selector">
+          <button class="dot active" type="button" aria-label="Show climbing_3mb demo" data-carousel-dot="0"></button>
+          <button class="dot" type="button" aria-label="Show climbing_2_3mb demo" data-carousel-dot="1"></button>
+        </div>
+      </div>
+    </section>
+
     <section class="section teaser-section">
       <figure class="figure wide">
         <img src="assets/teaser.png" alt="Qualitative teaser comparison for SplineHMR">
@@ -73,22 +114,6 @@
       <div class="rule"></div>
       <p>SplineHMR is a representation-level temporal prior for refining human mesh recovery results from monocular videos. Test-time refinement is often useful for improving 2D alignment, but frame-wise optimization can introduce unnatural temporal jitter. We address this by constraining the refinement updates to a low-dimensional B-spline trajectory subspace.</p>
       <p>Given an input motion sequence, SplineHMR optimizes or samples smooth control-point trajectories and decodes them into dense per-frame corrections for body pose and camera parameters. The prior is independent of a particular HMR backbone, making it easy to attach to different refinement pipelines. In this work we instantiate it as <strong>Spline-Opt</strong> for optimization-based refinement and <strong>Spline-Diff</strong> for diffusion-based refinement.</p>
-    </section>
-
-    <section class="section" id="demo">
-      <h2>Demo</h2>
-      <div class="rule"></div>
-      <p>The demo starts from precomputed SMPL-X results and refines the sequence with Spline-Opt. Red shows the input mesh before refinement; green shows the optimized mesh. Each GIF is synchronized side-by-side: the left half is the input video, and the right half is the Spline-Opt overlay output.</p>
-      <div class="demo-gallery">
-        <figure class="figure demo-figure">
-          <img src="assets/demo_overlay.gif" alt="Spline-Opt red-green overlay demo on climbing_3mb">
-          <figcaption><code>climbing_3mb</code>: input video vs. Spline-Opt overlay output.</figcaption>
-        </figure>
-        <figure class="figure demo-figure">
-          <img src="assets/demo_overlay_climbing_2.gif" alt="Spline-Opt red-green overlay demo on climbing_2_3mb">
-          <figcaption><code>climbing_2_3mb</code>: input video vs. Spline-Opt overlay output.</figcaption>
-        </figure>
-      </div>
     </section>
 
     <section class="section" id="method">
@@ -238,5 +263,48 @@
       <p><a href="https://github.com/yizhitutuqiu/SplineHMR">Code</a> · <a href="https://www.youtube.com/watch?v=BntuG1ZOT6g">Video</a> · DOI: <a href="https://doi.org/10.1145/3767308.3835749">10.1145/3767308.3835749</a></p>
     </footer>
   </main>
+  <script>
+    (function () {
+      const root = document.querySelector('[data-carousel]');
+      if (!root) return;
+
+      const slides = Array.from(root.querySelectorAll('[data-carousel-slide]'));
+      const dots = Array.from(root.querySelectorAll('[data-carousel-dot]'));
+      const prev = root.querySelector('[data-carousel-prev]');
+      const next = root.querySelector('[data-carousel-next]');
+      let current = 0;
+
+      function activate(index) {
+        current = (index + slides.length) % slides.length;
+        slides.forEach((slide, i) => {
+          const active = i === current;
+          slide.classList.toggle('active', active);
+          const video = slide.querySelector('video');
+          if (!video) return;
+          if (active) {
+            video.play().catch(function () {});
+          } else {
+            video.pause();
+          }
+        });
+        dots.forEach((dot, i) => dot.classList.toggle('active', i === current));
+      }
+
+      slides.forEach((slide) => {
+        const video = slide.querySelector('video');
+        const loader = slide.querySelector('[data-video-loading]');
+        if (!video || !loader) return;
+        const hideLoader = () => loader.classList.add('hidden');
+        if (video.readyState >= 2) hideLoader();
+        video.addEventListener('loadeddata', hideLoader, { once: true });
+        video.addEventListener('canplay', hideLoader, { once: true });
+      });
+
+      prev && prev.addEventListener('click', () => activate(current - 1));
+      next && next.addEventListener('click', () => activate(current + 1));
+      dots.forEach((dot, i) => dot.addEventListener('click', () => activate(i)));
+      activate(0);
+    })();
+  </script>
 </body>
 </html>
