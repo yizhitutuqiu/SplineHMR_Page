@@ -8,7 +8,7 @@
   <meta property="og:title" content="SplineHMR">
   <meta property="og:description" content="A universal B-spline prior for temporally stable SMPL refinement.">
   <meta property="og:image" content="assets/teaser.png">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=20260807-carousel">
 </head>
 <body>
   <main class="page">
@@ -66,30 +66,18 @@
       <div class="rule"></div>
       <p class="demo-intro">Each clip shows a synchronized 2×2 comparison: <strong>Input</strong>, <strong>Raw</strong>, <strong>Spline-Opt</strong>, and <strong>Spline-Diff</strong>. The lower row uses red/green overlays to show before/after refinement.</p>
 
-      <div class="demo-carousel" data-carousel data-active-demo="landscape">
+      <div class="demo-carousel" data-carousel data-demo-index="0">
         <div class="carousel-stage">
           <button class="carousel-arrow prev" type="button" aria-label="Previous demo" data-carousel-prev>‹</button>
 
-          <div class="carousel-track">
-            <article class="carousel-slide active" data-carousel-slide data-demo-shape="landscape" data-caption="climbing_3mb: Input / Raw / Spline-Opt / Spline-Diff.">
-              <div class="video-loading" data-video-loading>
-                <span class="loader-dot"></span>
-                <span>Video Loading...</span>
-              </div>
-              <video class="demo-video" autoplay muted loop playsinline preload="metadata">
-                <source src="assets/videos/climbing_3mb_demo_2x2_5mb.mp4" type="video/mp4">
-              </video>
-            </article>
-
-            <article class="carousel-slide" data-carousel-slide data-demo-shape="portrait" data-caption="climbing_2_3mb: Input / Raw / Spline-Opt / Spline-Diff.">
-              <div class="video-loading" data-video-loading>
-                <span class="loader-dot"></span>
-                <span>Video Loading...</span>
-              </div>
-              <video class="demo-video" autoplay muted loop playsinline preload="metadata">
-                <source src="assets/videos/climbing_2_3mb_demo_2x2_5mb.mp4" type="video/mp4">
-              </video>
-            </article>
+          <div class="carousel-frame">
+            <div class="video-loading" data-video-loading>
+              <span class="loader-dot"></span>
+              <span>Video Loading...</span>
+            </div>
+            <video class="demo-video" data-demo-video autoplay muted loop playsinline preload="metadata">
+              <source src="assets/videos/climbing_3mb_demo_2x2_5mb.mp4" type="video/mp4">
+            </video>
           </div>
 
           <button class="carousel-arrow next" type="button" aria-label="Next demo" data-carousel-next>›</button>
@@ -270,52 +258,62 @@
       const root = document.querySelector('[data-carousel]');
       if (!root) return;
 
-      const slides = Array.from(root.querySelectorAll('[data-carousel-slide]'));
-      const dots = Array.from(root.querySelectorAll('[data-carousel-dot]'));
+      const demos = [
+        {
+          src: 'assets/videos/climbing_3mb_demo_2x2_5mb.mp4',
+          caption: '<code>climbing_3mb</code>: Input / Raw / Spline-Opt / Spline-Diff.'
+        },
+        {
+          src: 'assets/videos/climbing_2_3mb_demo_2x2_5mb.mp4',
+          caption: '<code>climbing_2_3mb</code>: Input / Raw / Spline-Opt / Spline-Diff.'
+        }
+      ];
+
+      const video = root.querySelector('[data-demo-video]');
+      const loader = root.querySelector('[data-video-loading]');
       const caption = root.querySelector('[data-carousel-caption]');
+      const dots = Array.from(root.querySelectorAll('[data-carousel-dot]'));
       const prev = root.querySelector('[data-carousel-prev]');
       const next = root.querySelector('[data-carousel-next]');
       let current = 0;
 
-      function formatCaption(text) {
-        const parts = String(text || '').split(':');
-        if (parts.length < 2) return text || '';
-        const name = parts.shift();
-        return '<code>' + name + '</code>:' + parts.join(':');
+      function showLoader() {
+        if (loader) loader.classList.remove('hidden');
       }
 
-      function activate(index) {
-        current = (index + slides.length) % slides.length;
-        slides.forEach((slide, i) => {
-          const active = i === current;
-          slide.classList.toggle('active', active);
-          const video = slide.querySelector('video');
-          if (!video) return;
-          if (active) {
-            root.dataset.activeDemo = slide.dataset.demoShape || 'landscape';
-            if (caption) caption.innerHTML = formatCaption(slide.dataset.caption);
-            video.play().catch(function () {});
-          } else {
-            video.pause();
-          }
-        });
+      function hideLoader() {
+        if (loader) loader.classList.add('hidden');
+      }
+
+      function setVideo(index) {
+        current = (index + demos.length) % demos.length;
+        const demo = demos[current];
+        root.dataset.demoIndex = String(current);
         dots.forEach((dot, i) => dot.classList.toggle('active', i === current));
+        if (caption) caption.innerHTML = demo.caption;
+        if (!video) return;
+
+        showLoader();
+        const source = video.querySelector('source');
+        if (source && source.getAttribute('src') !== demo.src) {
+          source.setAttribute('src', demo.src);
+          video.load();
+        }
+        video.play().catch(function () {});
       }
 
-      slides.forEach((slide) => {
-        const video = slide.querySelector('video');
-        const loader = slide.querySelector('[data-video-loading]');
-        if (!video || !loader) return;
-        const hideLoader = () => loader.classList.add('hidden');
+      if (video) {
         if (video.readyState >= 2) hideLoader();
-        video.addEventListener('loadeddata', hideLoader, { once: true });
-        video.addEventListener('canplay', hideLoader, { once: true });
-      });
+        video.addEventListener('loadeddata', hideLoader);
+        video.addEventListener('canplay', hideLoader);
+        video.addEventListener('playing', hideLoader);
+        video.addEventListener('waiting', showLoader);
+      }
 
-      prev && prev.addEventListener('click', () => activate(current - 1));
-      next && next.addEventListener('click', () => activate(current + 1));
-      dots.forEach((dot, i) => dot.addEventListener('click', () => activate(i)));
-      activate(0);
+      prev && prev.addEventListener('click', () => setVideo(current - 1));
+      next && next.addEventListener('click', () => setVideo(current + 1));
+      dots.forEach((dot, i) => dot.addEventListener('click', () => setVideo(i)));
+      setVideo(0);
     })();
   </script>
 </body>
