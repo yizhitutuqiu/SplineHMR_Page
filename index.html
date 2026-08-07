@@ -8,7 +8,9 @@
   <meta property="og:title" content="SplineHMR">
   <meta property="og:description" content="A universal B-spline prior for temporally stable SMPL refinement.">
   <meta property="og:image" content="assets/teaser.png">
-  <link rel="stylesheet" href="style.css?v=20260807-carousel">
+  <link rel="preload" as="video" href="assets/videos/climbing_3mb_demo_2x2_5mb.mp4" type="video/mp4">
+  <link rel="preload" as="video" href="assets/videos/climbing_2_3mb_demo_2x2_5mb.mp4" type="video/mp4">
+  <link rel="stylesheet" href="style.css?v=20260807-carousel-preload">
 </head>
 <body>
   <main class="page">
@@ -75,8 +77,11 @@
               <span class="loader-dot"></span>
               <span>Video Loading...</span>
             </div>
-            <video class="demo-video" data-demo-video autoplay muted loop playsinline preload="metadata">
+            <video class="demo-video active" data-demo-video="0" autoplay muted loop playsinline preload="auto">
               <source src="assets/videos/climbing_3mb_demo_2x2_5mb.mp4" type="video/mp4">
+            </video>
+            <video class="demo-video" data-demo-video="1" muted loop playsinline preload="auto">
+              <source src="assets/videos/climbing_2_3mb_demo_2x2_5mb.mp4" type="video/mp4">
             </video>
           </div>
 
@@ -260,16 +265,14 @@
 
       const demos = [
         {
-          src: 'assets/videos/climbing_3mb_demo_2x2_5mb.mp4',
           caption: '<code>climbing_3mb</code>: Input / Raw / Spline-Opt / Spline-Diff.'
         },
         {
-          src: 'assets/videos/climbing_2_3mb_demo_2x2_5mb.mp4',
           caption: '<code>climbing_2_3mb</code>: Input / Raw / Spline-Opt / Spline-Diff.'
         }
       ];
 
-      const video = root.querySelector('[data-demo-video]');
+      const videos = Array.from(root.querySelectorAll('[data-demo-video]'));
       const loader = root.querySelector('[data-video-loading]');
       const caption = root.querySelector('[data-carousel-caption]');
       const dots = Array.from(root.querySelectorAll('[data-carousel-dot]'));
@@ -285,30 +288,48 @@
         if (loader) loader.classList.add('hidden');
       }
 
+      function videoIsReady(video) {
+        return video && (video.readyState >= 2 || video.dataset.ready === 'true');
+      }
+
+      function updateLoader(video) {
+        if (videoIsReady(video)) hideLoader();
+        else showLoader();
+      }
+
       function setVideo(index) {
-        current = (index + demos.length) % demos.length;
-        const demo = demos[current];
+        current = (index + videos.length) % videos.length;
         root.dataset.demoIndex = String(current);
         dots.forEach((dot, i) => dot.classList.toggle('active', i === current));
-        if (caption) caption.innerHTML = demo.caption;
-        if (!video) return;
+        if (caption) caption.innerHTML = demos[current].caption;
 
-        showLoader();
-        const source = video.querySelector('source');
-        if (source && source.getAttribute('src') !== demo.src) {
-          source.setAttribute('src', demo.src);
-          video.load();
-        }
-        video.play().catch(function () {});
+        videos.forEach((video, i) => {
+          const active = i === current;
+          video.classList.toggle('active', active);
+          if (active) {
+            updateLoader(video);
+            video.play().catch(function () {});
+          } else {
+            video.pause();
+          }
+        });
       }
 
-      if (video) {
-        if (video.readyState >= 2) hideLoader();
-        video.addEventListener('loadeddata', hideLoader);
-        video.addEventListener('canplay', hideLoader);
-        video.addEventListener('playing', hideLoader);
-        video.addEventListener('waiting', showLoader);
-      }
+      videos.forEach((video, i) => {
+        const markReady = () => {
+          video.dataset.ready = 'true';
+          if (i === current) hideLoader();
+        };
+        if (video.readyState >= 2) markReady();
+        video.addEventListener('loadeddata', markReady);
+        video.addEventListener('canplay', markReady);
+        video.addEventListener('canplaythrough', markReady);
+        video.addEventListener('playing', markReady);
+        video.addEventListener('waiting', () => {
+          if (i === current) showLoader();
+        });
+        video.load();
+      });
 
       prev && prev.addEventListener('click', () => setVideo(current - 1));
       next && next.addEventListener('click', () => setVideo(current + 1));
