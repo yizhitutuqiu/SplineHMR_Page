@@ -66,34 +66,36 @@
       <div class="rule"></div>
       <p class="demo-intro">Each clip shows a synchronized 2×2 comparison: <strong>Input</strong>, <strong>Raw</strong>, <strong>Spline-Opt</strong>, and <strong>Spline-Diff</strong>. The lower row uses red/green overlays to show before/after refinement.</p>
 
-      <div class="demo-carousel" data-carousel>
-        <button class="carousel-arrow prev" type="button" aria-label="Previous demo" data-carousel-prev>‹</button>
+      <div class="demo-carousel" data-carousel data-active-demo="landscape">
+        <div class="carousel-stage">
+          <button class="carousel-arrow prev" type="button" aria-label="Previous demo" data-carousel-prev>‹</button>
 
-        <div class="carousel-track">
-          <article class="carousel-slide active" data-carousel-slide>
-            <div class="video-loading" data-video-loading>
-              <span class="loader-dot"></span>
-              <span>Video Loading...</span>
-            </div>
-            <video class="demo-video" autoplay muted loop playsinline preload="metadata" poster="assets/teaser.png">
-              <source src="assets/videos/climbing_3mb_demo_2x2_5mb.mp4" type="video/mp4">
-            </video>
-            <div class="slide-caption"><code>climbing_3mb</code>: Input / Raw / Spline-Opt / Spline-Diff.</div>
-          </article>
+          <div class="carousel-track">
+            <article class="carousel-slide active" data-carousel-slide data-demo-shape="landscape" data-caption="climbing_3mb: Input / Raw / Spline-Opt / Spline-Diff.">
+              <div class="video-loading" data-video-loading>
+                <span class="loader-dot"></span>
+                <span>Video Loading...</span>
+              </div>
+              <video class="demo-video" autoplay muted loop playsinline preload="metadata">
+                <source src="assets/videos/climbing_3mb_demo_2x2_5mb.mp4" type="video/mp4">
+              </video>
+            </article>
 
-          <article class="carousel-slide" data-carousel-slide>
-            <div class="video-loading" data-video-loading>
-              <span class="loader-dot"></span>
-              <span>Video Loading...</span>
-            </div>
-            <video class="demo-video portrait-video" autoplay muted loop playsinline preload="metadata" poster="assets/teaser.png">
-              <source src="assets/videos/climbing_2_3mb_demo_2x2_5mb.mp4" type="video/mp4">
-            </video>
-            <div class="slide-caption"><code>climbing_2_3mb</code>: Input / Raw / Spline-Opt / Spline-Diff.</div>
-          </article>
+            <article class="carousel-slide" data-carousel-slide data-demo-shape="portrait" data-caption="climbing_2_3mb: Input / Raw / Spline-Opt / Spline-Diff.">
+              <div class="video-loading" data-video-loading>
+                <span class="loader-dot"></span>
+                <span>Video Loading...</span>
+              </div>
+              <video class="demo-video" autoplay muted loop playsinline preload="metadata">
+                <source src="assets/videos/climbing_2_3mb_demo_2x2_5mb.mp4" type="video/mp4">
+              </video>
+            </article>
+          </div>
+
+          <button class="carousel-arrow next" type="button" aria-label="Next demo" data-carousel-next>›</button>
         </div>
 
-        <button class="carousel-arrow next" type="button" aria-label="Next demo" data-carousel-next>›</button>
+        <div class="slide-caption" data-carousel-caption><code>climbing_3mb</code>: Input / Raw / Spline-Opt / Spline-Diff.</div>
 
         <div class="carousel-dots" aria-label="Demo selector">
           <button class="dot active" type="button" aria-label="Show climbing_3mb demo" data-carousel-dot="0"></button>
@@ -270,9 +272,17 @@
 
       const slides = Array.from(root.querySelectorAll('[data-carousel-slide]'));
       const dots = Array.from(root.querySelectorAll('[data-carousel-dot]'));
+      const caption = root.querySelector('[data-carousel-caption]');
       const prev = root.querySelector('[data-carousel-prev]');
       const next = root.querySelector('[data-carousel-next]');
       let current = 0;
+
+      function formatCaption(text) {
+        const parts = String(text || '').split(':');
+        if (parts.length < 2) return text || '';
+        const name = parts.shift();
+        return '<code>' + name + '</code>:' + parts.join(':');
+      }
 
       function activate(index) {
         current = (index + slides.length) % slides.length;
@@ -282,6 +292,8 @@
           const video = slide.querySelector('video');
           if (!video) return;
           if (active) {
+            root.dataset.activeDemo = slide.dataset.demoShape || 'landscape';
+            if (caption) caption.innerHTML = formatCaption(slide.dataset.caption);
             video.play().catch(function () {});
           } else {
             video.pause();
