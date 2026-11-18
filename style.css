@@ -85,10 +85,7 @@ h1 {
 }
 
 .link-button.paper {
-  background: #f2f2f2;
-  color: #666666;
-  border-color: #d4d4d4;
-  cursor: default;
+  background: #3273dc;
 }
 
 .link-button.code { background: #24292f; }
@@ -100,13 +97,6 @@ h1 {
   height: 17px;
   fill: currentColor;
   flex: 0 0 auto;
-}
-
-.soon {
-  margin-left: 1px;
-  font-size: 0.82em;
-  font-weight: 600;
-  opacity: 0.82;
 }
 
 .note {
@@ -156,6 +146,39 @@ h1 {
 }
 
 .figure.wide { max-width: 820px; }
+
+.concept-figure { max-width: 860px; margin-top: 22px; }
+.concept-figure + .concept-figure { margin-top: 30px; }
+.robustness-figure { max-width: 920px; margin: 18px auto 28px; }
+.robustness-player { position: relative; }
+.robustness-player video {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: contain;
+  background: #ffffff;
+}
+.robustness-subtitle { margin: 26px 0 10px; font-size: 1.22rem; }
+.robustness-loading {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: calc(100% - 24px);
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.94);
+  color: #444444;
+  border: 1px solid #dddddd;
+  border-radius: 4px;
+  font-size: 0.88rem;
+  text-align: center;
+  pointer-events: none;
+}
+.robustness-loading[hidden] { display: none; }
+.loading-ellipsis { animation: loading-ellipsis 1.2s ease-in-out infinite; }
+@keyframes loading-ellipsis { 50% { opacity: 0.25; } }
+@media (prefers-reduced-motion: reduce) { .loading-ellipsis { animation: none; } }
 
 .demo-carousel-section {
   padding-top: 12px;

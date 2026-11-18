@@ -1,0 +1,110 @@
+{
+  "source_presentation": "SplineHMR_ACMMM2026_Final.pptx",
+  "source_sha256": "f191d16a1125e46262562c5dc6863fbd9bfdd6473fb8069832ccdf5efc91a1b5",
+  "diagrams": [
+    {
+      "file": "assets/framewise_independent_updates.webp",
+      "slide": 3,
+      "source_member": "ppt/media/image9.png",
+      "source_sha256": "8eff304e4fdf29c550dc874249d11498f4c37fd73adc9fd18fa5f40aa6647457",
+      "source_size": [
+        2560,
+        992
+      ],
+      "size": [
+        2200,
+        853
+      ],
+      "bytes": 189724,
+      "sha256": "9f025a9e7940a7cd0af03788f808c26909a1dbb29e6ed59c0aa3e19e193e9c9a"
+    },
+    {
+      "file": "assets/spline_shared_corrections.webp",
+      "slide": 4,
+      "source_member": "ppt/media/image10.png",
+      "source_sha256": "793c9dd4f8d015e2dee178a905ad8f165b88368918b0e12fd741ab2724b7d2f5",
+      "source_size": [
+        15670,
+        8300
+      ],
+      "size": [
+        2200,
+        1165
+      ],
+      "bytes": 279320,
+      "sha256": "7ae3e8f5c7d1b63b7174e30a7ae73028cf1611b17e51b677e9021441f448e1ee"
+    }
+  ],
+  "videos": [
+    {
+      "file": "assets/videos/noisy_guidance_comparison_5mb.mp4",
+      "slide": 12,
+      "bytes": 4357216,
+      "sha256": "5401f6ebb95bd431cbd73cb86d668b59445f619e39387f905b84238218c0be5d",
+      "poster": "assets/noisy_guidance_comparison_poster.webp",
+      "width": 1600,
+      "height": 900,
+      "fps": 30.0,
+      "codec": "h264",
+      "pixel_format": "yuv420p",
+      "frames": 240,
+      "duration": 8.0,
+      "sources": [
+        {
+          "member": "ppt/media/media7.mp4",
+          "sha256": "360f3fff2680068b01fffe6a3cabc4260452dbcabf7231807f98c64df4cacf94"
+        },
+        {
+          "member": "ppt/media/media8.mp4",
+          "sha256": "abb188b6ef73ba47fd9ff94df6b37ce973e9ab57a4459e063bb589b0d757c077"
+        },
+        {
+          "member": "ppt/media/media9.mp4",
+          "sha256": "3a2fade7642f7cdcceb03be3b80f0ff2c80de761dbab5a00c931397ed63e97f3"
+        },
+        {
+          "member": "ppt/media/media10.mp4",
+          "sha256": "b6891e0a781784e14e172715cdcc70042191a7d71aa97784b908f62a74647574"
+        }
+      ],
+      "synchronization": "source timestamps checked frame-for-frame; no dropped frames",
+      "layout": "clean guidance + four-method results, perturbed guidance + four-method results"
+    },
+    {
+      "file": "assets/videos/missing_keypoints_comparison_5mb.mp4",
+      "slide": 13,
+      "bytes": 4368575,
+      "sha256": "3ba34e8662fbbd6557444b27d47ceb1cb23bf7d757c74d0ace9e7f52da6e6bbf",
+      "poster": "assets/missing_keypoints_comparison_poster.webp",
+      "width": 1600,
+      "height": 900,
+      "fps": 30.0,
+      "codec": "h264",
+      "pixel_format": "yuv420p",
+      "frames": 240,
+      "duration": 8.0,
+      "sources": [
+        {
+          "member": "ppt/media/media7.mp4",
+          "sha256": "360f3fff2680068b01fffe6a3cabc4260452dbcabf7231807f98c64df4cacf94"
+        },
+        {
+          "member": "ppt/media/media8.mp4",
+          "sha256": "abb188b6ef73ba47fd9ff94df6b37ce973e9ab57a4459e063bb589b0d757c077"
+        },
+        {
+          "member": "ppt/media/media11.mp4",
+          "sha256": "4f9c2df49b177a114d757c653f0c5fe9d6628e9ef113fd146ea71caad3a2c847"
+        },
+        {
+          "member": "ppt/media/media12.mp4",
+          "sha256": "927aa70b91eb98c5fb4123c37745051af4ef0c9540de375ecdbe35cf2adac078"
+        }
+      ],
+      "synchronization": "source timestamps checked frame-for-frame; no dropped frames",
+      "layout": "clean guidance + four-method results, perturbed guidance + four-method results"
+    }
+  ],
+  "limit_bytes": 5000000,
+  "resource_policy": "serial; one codec/BLAS/OpenCV thread; no GPU; low-memory PNG reduction"
+}

@@ -10,7 +10,7 @@
   <meta property="og:image" content="assets/teaser.png">
   <link rel="preload" as="video" href="assets/videos/climbing_3mb_demo_2x2_5mb.mp4" type="video/mp4">
   <link rel="preload" as="video" href="assets/videos/climbing_2_3mb_demo_2x2_5mb.mp4" type="video/mp4">
-  <link rel="stylesheet" href="style.css?v=20260807-carousel-preload">
+  <link rel="stylesheet" href="style.css?v=20261118-oral-media">
 </head>
 <body>
   <main class="page">
@@ -33,10 +33,10 @@
       </div>
 
       <nav class="links" aria-label="Project links">
-        <span class="link-button paper">
+        <a class="link-button paper" href="https://doi.org/10.1145/3767308.3835749" aria-label="Read the paper in the ACM Digital Library">
           <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h9l5 5v15H6V2zm8 1.8V8h4.2L14 3.8zM8 12h8v-1.5H8V12zm0 4h8v-1.5H8V16zm0 3h6v-1.5H8V19z"/></svg>
-          <span>Paper</span><span class="soon">soon</span>
-        </span>
+          <span>Paper</span>
+        </a>
         <a class="link-button code" href="https://github.com/yizhitutuqiu/SplineHMR">
           <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5A11.5 11.5 0 0 0 8.36 22.9c.58.1.79-.25.79-.56v-2.14c-3.22.7-3.9-1.38-3.9-1.38-.53-1.35-1.29-1.71-1.29-1.71-1.05-.72.08-.7.08-.7 1.17.08 1.78 1.2 1.78 1.2 1.04 1.78 2.73 1.27 3.4.97.1-.75.41-1.27.74-1.56-2.57-.29-5.27-1.28-5.27-5.72 0-1.26.45-2.3 1.2-3.11-.12-.29-.52-1.47.11-3.07 0 0 .98-.31 3.2 1.19a11.1 11.1 0 0 1 5.82 0c2.22-1.5 3.2-1.19 3.2-1.19.63 1.6.23 2.78.11 3.07.75.81 1.2 1.85 1.2 3.11 0 4.45-2.7 5.43-5.28 5.72.42.36.79 1.08.79 2.18v3.23c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg>
           <span>Code</span>
@@ -50,7 +50,7 @@
           <span>DOI</span>
         </a>
       </nav>
-      <p class="note">The paper has been accepted to ACM Multimedia 2026. The ACM DL page is not live yet; DOI assigned: <a href="https://doi.org/10.1145/3767308.3835749">10.1145/3767308.3835749</a>.</p>
+      <p class="note">Published in ACM Multimedia 2026. Read the paper in the <a href="https://doi.org/10.1145/3767308.3835749">ACM Digital Library</a>.</p>
     </header>
 
     <section class="section" id="tldr">
@@ -109,6 +109,20 @@
       <div class="rule"></div>
       <p>SplineHMR is a representation-level temporal prior for refining human mesh recovery results from monocular videos. Test-time refinement is often useful for improving 2D alignment, but frame-wise optimization can introduce unnatural temporal jitter. We address this by constraining the refinement updates to a low-dimensional B-spline trajectory subspace.</p>
       <p>Given an input motion sequence, SplineHMR optimizes or samples smooth control-point trajectories and decodes them into dense per-frame corrections for body pose and camera parameters. The prior is independent of a particular HMR backbone, making it easy to attach to different refinement pipelines. In this work we instantiate it as <strong>Spline-Opt</strong> for optimization-based refinement and <strong>Spline-Diff</strong> for diffusion-based refinement.</p>
+    </section>
+
+    <section class="section" id="temporal-coupling">
+      <h2>From independent updates to shared corrections</h2>
+      <div class="rule"></div>
+      <p>Frame-wise refinement can fit each observation well yet turn small fluctuations in 2D guidance into independent pose corrections. SplineHMR changes the representation of those corrections: neighboring frames share a compact set of B-spline coefficients.</p>
+      <figure class="figure concept-figure">
+        <img src="assets/framewise_independent_updates.webp" width="2200" height="853" loading="lazy" decoding="async" alt="Frame-wise refinement independently fits the target in each frame, allowing keypoint fluctuations to produce temporally inconsistent pose corrections.">
+        <figcaption><strong>Frame-wise refinement:</strong> each frame follows its own target, with no shared temporal representation of the updates.</figcaption>
+      </figure>
+      <figure class="figure concept-figure">
+        <img src="assets/spline_shared_corrections.webp" width="2200" height="1165" loading="lazy" decoding="async" alt="SplineHMR uses shared B-spline basis functions and coefficients to couple neighboring frames along a smooth correction trajectory.">
+        <figcaption><strong>SplineHMR:</strong> shared basis functions couple the corrections across time while retaining the flexibility to fit image evidence.</figcaption>
+      </figure>
     </section>
 
     <section class="section" id="method">
@@ -219,6 +233,35 @@
       </div>
     </section>
 
+    <section class="section" id="robustness">
+      <h2>Spline refiners remain stable with noisy guidance</h2>
+      <div class="rule"></div>
+      <p>Test-time refinement should not turn uncertainty in 2D observations into high-frequency motion. These synchronized comparisons from our oral presentation show the guidance actually used and the resulting refinements, with and without perturbations.</p>
+      <figure class="figure robustness-figure">
+        <div class="robustness-player">
+          <video data-robustness-video controls autoplay muted loop playsinline preload="metadata" width="1600" height="900" poster="assets/noisy_guidance_comparison_poster.webp" aria-label="Clean versus Gaussian-noisy 2D guidance and synchronized four-method refinement comparison">
+            <source src="assets/videos/noisy_guidance_comparison_5mb.mp4" type="video/mp4">
+            Your browser does not support embedded video. <a href="assets/videos/noisy_guidance_comparison_5mb.mp4">Download the noise comparison.</a>
+          </video>
+          <span class="robustness-loading" role="status" hidden>Video Loading<span class="loading-ellipsis" aria-hidden="true">...</span></span>
+        </div>
+        <figcaption><strong>Gaussian noise:</strong> clean guidance versus independent Gaussian perturbations with <em>&sigma;/L = 0.005</em> (0.5% of the original image's longer side). Each condition shows its 2D guidance beside the four-method result. <a href="assets/videos/noisy_guidance_comparison_5mb.mp4" download>Download MP4</a></figcaption>
+      </figure>
+
+      <h3 class="robustness-subtitle">Spline refiners tolerate missing keypoints</h3>
+      <p>We also remove two COCO17 keypoints at random in each frame. The original and masked guidance are shown alongside their corresponding refinements.</p>
+      <figure class="figure robustness-figure">
+        <div class="robustness-player">
+          <video data-robustness-video controls autoplay muted loop playsinline preload="metadata" width="1600" height="900" poster="assets/missing_keypoints_comparison_poster.webp" aria-label="No masking versus two randomly masked keypoints per frame, with synchronized guidance and four-method refinement results">
+            <source src="assets/videos/missing_keypoints_comparison_5mb.mp4" type="video/mp4">
+            Your browser does not support embedded video. <a href="assets/videos/missing_keypoints_comparison_5mb.mp4">Download the missing-keypoint comparison.</a>
+          </video>
+          <span class="robustness-loading" role="status" hidden>Video Loading<span class="loading-ellipsis" aria-hidden="true">...</span></span>
+        </div>
+        <figcaption><strong>Missing keypoints:</strong> no masking versus two randomly masked joints per frame. Within each four-method panel, the top row is LBFGS-Optim (Framewise) / ScoreHMR; the bottom row is Spline-Opt / Spline-Diff. Red shows before refinement and green shows after refinement. <a href="assets/videos/missing_keypoints_comparison_5mb.mp4" download>Download MP4</a></figcaption>
+      </figure>
+    </section>
+
     <section class="section" id="results">
       <h2>Qualitative Results</h2>
       <div class="rule"></div>
@@ -249,6 +292,7 @@
   address   = {Rio de Janeiro, Brazil},
   publisher = {Association for Computing Machinery},
   doi       = {10.1145/3767308.3835749},
+  url       = {https://doi.org/10.1145/3767308.3835749},
   isbn      = {979-8-4007-2213-4/2026/11}
 }</pre>
     </section>
@@ -258,6 +302,36 @@
       <p><a href="https://github.com/yizhitutuqiu/SplineHMR">Code</a> · <a href="https://www.youtube.com/watch?v=BntuG1ZOT6g">Video</a> · DOI: <a href="https://doi.org/10.1145/3767308.3835749">10.1145/3767308.3835749</a></p>
     </footer>
   </main>
+  <script>
+    (function () {
+      const videos = Array.from(document.querySelectorAll('[data-robustness-video]'));
+      videos.forEach((video) => {
+        const loading = video.parentElement.querySelector('.robustness-loading');
+        video.muted = true;
+        video.pause();
+        function hideLoader() { loading.hidden = true; }
+        video.addEventListener('loadeddata', hideLoader);
+        video.addEventListener('canplay', hideLoader);
+        video.addEventListener('playing', hideLoader);
+        video.addEventListener('waiting', () => { loading.hidden = false; });
+        video.addEventListener('error', () => {
+          loading.textContent = 'Unable to load video. Please use the download link below.';
+          loading.hidden = false;
+        });
+      });
+      if (!('IntersectionObserver' in window)) {
+        videos.forEach((video) => video.play().catch(function () {}));
+        return;
+      }
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(({target: video, isIntersecting}) => {
+          if (isIntersecting) video.play().catch(function () {});
+          else video.pause();
+        });
+      }, {threshold: 0.2});
+      videos.forEach((video) => observer.observe(video));
+    })();
+  </script>
   <script>
     (function () {
       const root = document.querySelector('[data-carousel]');
